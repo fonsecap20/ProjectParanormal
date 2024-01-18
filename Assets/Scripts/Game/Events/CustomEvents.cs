@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Custom events made to be used via the EventBus are stored here.
-public class PlayerInteractStatusUpdate
-{
-    public bool _canInteract = false;
+/* Custom events made to be used via the EventBus are stored here. */
 
-    public PlayerInteractStatusUpdate(bool canInteract) {  _canInteract = canInteract; }
+// Sent when the 'Q' key is pressed in the PlayerController.
+public class ToggleInventoryEvent
+{
+    public ToggleInventoryEvent() { }
 }

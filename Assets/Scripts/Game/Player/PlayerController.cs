@@ -34,4 +34,10 @@ public class PlayerController : MonoBehaviour
     {
         _movementInput = inputValue.Get<Vector2>();
     }
+
+    private void OnToggleInventory()
+    {
+        //Debug.Log("Toggle Inventory");
+        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent());
+    }
 }

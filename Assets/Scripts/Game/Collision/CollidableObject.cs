@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Parent class for all collidable objects. They will check if they are colliding with an object
+   within its filter every frame invoking the OnCollided function for each gameobject if so. */
 public class CollidableObject : MonoBehaviour
 {
     [SerializeField]
@@ -28,8 +30,6 @@ public class CollidableObject : MonoBehaviour
         {
             OnCollided(o.gameObject);
         }
-
-        if ( _collidedObjects.Count == 0 ) { EventBus.Publish<PlayerInteractStatusUpdate>(new PlayerInteractStatusUpdate(false)); }
     }
 
     protected virtual void OnCollided(GameObject collidedObject)
