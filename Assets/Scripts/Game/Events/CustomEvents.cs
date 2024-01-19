@@ -9,3 +9,15 @@ public class ToggleInventoryEvent
 {
     public ToggleInventoryEvent() { }
 }
+
+// Sent when the user interacts with an object and finds an item
+// or when they interact with an NPC and they are given an item.
+public class AddItemEvent
+{
+    public Item item;
+
+    public AddItemEvent(Item _item) 
+    {
+        item = _item;
+    }
+}

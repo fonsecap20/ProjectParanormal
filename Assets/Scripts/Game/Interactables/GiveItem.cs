@@ -6,11 +6,11 @@ using UnityEngine;
    Add the given item to the player's inventory. */
 public class GiveItem : InteractableObject
 {
-
+    [SerializeField]
+    private Item _item;
     protected override void Interact()
     {
-        base.Interact();
-
-
+        EventBus.Publish<AddItemEvent>(new AddItemEvent(_item));
+        this.enabled = false;
     }
 }
