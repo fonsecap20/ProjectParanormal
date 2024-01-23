@@ -21,3 +21,24 @@ public class AddItemEvent
         item = _item;
     }
 }
+
+// Sent when the user interacts with an object and begins a battle.
+public class StartBattleEvent
+{
+    public Enemy enemy;
+
+    public StartBattleEvent(Enemy _enemy)
+    {
+        enemy = _enemy;
+    }
+}
+
+// Sent when the status of battle has changed.
+public class BattleStateChange
+{
+    public BattleState battleState;
+    public BattleStateChange(BattleState _battleState)
+    {
+        battleState = _battleState;
+    }
+}
