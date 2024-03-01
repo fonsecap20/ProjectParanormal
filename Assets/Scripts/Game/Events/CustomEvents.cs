@@ -4,10 +4,15 @@ using UnityEngine;
 
 /* Custom events made to be used via the EventBus are stored here. */
 
+//====INVENTORY====//
 // Sent when the 'Q' key is pressed in the PlayerController.
 public class ToggleInventoryEvent
 {
-    public ToggleInventoryEvent() { }
+    public string prompt;
+    public ToggleInventoryEvent(string _prompt) 
+    {
+        prompt = _prompt;
+    }
 }
 
 // Sent when the user interacts with an object and finds an item
@@ -22,12 +27,13 @@ public class AddItemEvent
     }
 }
 
+//====BATTLE====//
 // Sent when the user interacts with an object and begins a battle.
 public class StartBattleEvent
 {
-    public Enemy enemy;
+    public GameObject enemy;
 
-    public StartBattleEvent(Enemy _enemy)
+    public StartBattleEvent(GameObject _enemy)
     {
         enemy = _enemy;
     }

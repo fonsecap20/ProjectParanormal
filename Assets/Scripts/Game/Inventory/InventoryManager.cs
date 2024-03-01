@@ -17,12 +17,18 @@ public class InventoryManager : MonoBehaviour
     private Text _itemDescription;
     [SerializeField]
     private Image _itemIcon;
+    [SerializeField]
+    private Text _prompt;
 
     //======ITEM SLOTS INFO======//
     [Header("Bottom Inventory References")]
     [SerializeField]
     private ItemSlot[] _itemSlots;
     private int _selectedItemSlotIndex;
+
+    [Header("Text Settings")]
+    [SerializeField]
+    private float _promptLetterDelay;
 
     // Subscriptions
     Subscription<ToggleInventoryEvent> _toggleInventoryEvent;
@@ -43,16 +49,16 @@ public class InventoryManager : MonoBehaviour
 
         if (_inventoryCanvas.activeSelf)
         {
-            Time.timeScale = 0;
-
+            FindObjectOfType<PlayerController>().enabled = false;
             _itemSlots[0].SelectItem();
             _selectedItemSlotIndex = 0;
             ShowItem(_itemSlots[0].GetItemInfo());
+            Prompt(t.prompt);
         }
         else
         {
             _itemSlots[_selectedItemSlotIndex].DeselectItem();
-            Time.timeScale = 1;
+            FindObjectOfType<PlayerController>().enabled = true;
         }
     }
 
@@ -74,6 +80,24 @@ public class InventoryManager : MonoBehaviour
         _itemName.text = item.name;
         _itemDescription.text = item.description;
         _itemIcon.sprite = item.icon;
+    }
+
+    private void Prompt(string prompt)
+    {
+        StopAllCoroutines();
+
+        _prompt.text = "";
+
+        StartCoroutine(DelayedText(prompt));
+    }
+
+    private IEnumerator DelayedText(string text)
+    {
+        for (int i = 0; i < text.Length; i++)
+        {
+            _prompt.text += text[i];
+            yield return new WaitForSeconds(_promptLetterDelay);
+        }
     }
 
     private void OnMove(InputValue inputValue)

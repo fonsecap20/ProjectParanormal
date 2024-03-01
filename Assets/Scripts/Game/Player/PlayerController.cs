@@ -6,8 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     // Movement variables.
-    [SerializeField]
-    private float _speed;
+    [SerializeField] private float _speed;
 
     private Rigidbody2D _rigidbody;
     private Vector2 _movementInput;
@@ -38,6 +37,11 @@ public class PlayerController : MonoBehaviour
     private void OnToggleInventory()
     {
         //Debug.Log("Toggle Inventory");
-        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent());
+        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent("Let me take a look..."));
+    }
+
+    private void OnDisable()
+    {
+        _rigidbody.velocity = Vector2.zero;
     }
 }
