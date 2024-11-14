@@ -70,6 +70,7 @@ public class InventoryManager : MonoBehaviour
             if (_itemSlots[i]._isFull == false)
             {
                 _itemSlots[i].AddItem(a.item);
+                Debug.Log($"Added {a.item.name} item.");
                 return;
             }
         }
@@ -133,6 +134,18 @@ public class InventoryManager : MonoBehaviour
         _selectedItemSlotIndex = _selectedItemIndexChange;
         _itemSlots[_selectedItemSlotIndex].SelectItem();
         ShowItem(_itemSlots[_selectedItemSlotIndex].GetItemInfo());
+    }
+
+    private void OnSubmit()
+    {
+        if (!_inventoryCanvas.activeSelf)
+        {
+            return;
+        }
+
+        EventBus.Publish<SubmitItemEvent>(new SubmitItemEvent(_itemSlots[_selectedItemSlotIndex].GetItemInfo()));
+
+        Debug.Log($"Submitted the {_itemSlots[_selectedItemSlotIndex].GetItemInfo().name} item.");
     }
 
     private void OnDestroy()

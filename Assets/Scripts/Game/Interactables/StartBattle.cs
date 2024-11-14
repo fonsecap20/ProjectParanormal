@@ -8,7 +8,7 @@ using UnityEngine;
 public class StartBattle : InteractableObject
 {
     [SerializeField]
-    private GameObject _enemy;
+    private Enemy _enemy;
     protected override void Interact()
     {
         if (_enemy == null) { return; }

@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Enemy", menuName = "Enemy")]
 public class Enemy : ScriptableObject
 {
-    public GameObject enemyPrefab;
     public new string name;
-    public int health;
+    public GameObject enemyPrefab;
+    public GameObject defendMinigamePrefab;
+    public GameObject punishMinigamePrefab;
+    public List<Item> solution;
 }

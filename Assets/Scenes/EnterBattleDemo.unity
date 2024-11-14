@@ -456,8 +456,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2110662769}
-  - {fileID: 1743789730}
   - {fileID: 1848250693}
+  - {fileID: 1743789730}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -936,6 +936,7 @@ MonoBehaviour:
   _blackScreen: {fileID: 1445994696}
   _transitionDuration: 2
   _timeFadedOut: 1
+  _enemyTransitionDuration: 1
 --- !u!1001 &459923483
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2694,7 +2695,7 @@ GameObject:
   - component: {fileID: 1743789732}
   - component: {fileID: 1743789731}
   m_Layer: 0
-  m_Name: Chest (1)
+  m_Name: Chest (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2713,7 +2714,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 209886175}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1743789731
 MonoBehaviour:
@@ -2833,7 +2834,7 @@ GameObject:
   - component: {fileID: 1848250695}
   - component: {fileID: 1848250694}
   m_Layer: 0
-  m_Name: Chest (2)
+  m_Name: Chest (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2852,7 +2853,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 209886175}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1848250694
 MonoBehaviour:
@@ -2880,7 +2881,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  _enemy: {fileID: 4325685312207143384, guid: 3cbd0f7a298f2cc4a810d66198a05580, type: 3}
+  _enemy: {fileID: 11400000, guid: 80a6d3ff747cf1f4e9fa704c9adcb404, type: 2}
 --- !u!61 &1848250695
 BoxCollider2D:
   m_ObjectHideFlags: 0

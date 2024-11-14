@@ -27,13 +27,24 @@ public class AddItemEvent
     }
 }
 
+// Sent when the 'Z' key is pressed in the InventoryManager.
+public class SubmitItemEvent
+{
+    public Item item;
+
+    public SubmitItemEvent(Item _item)
+    {
+        item= _item;
+    }
+}
+
 //====BATTLE====//
 // Sent when the user interacts with an object and begins a battle.
 public class StartBattleEvent
 {
-    public GameObject enemy;
+    public Enemy enemy;
 
-    public StartBattleEvent(GameObject _enemy)
+    public StartBattleEvent(Enemy _enemy)
     {
         enemy = _enemy;
     }

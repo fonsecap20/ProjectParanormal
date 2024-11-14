@@ -35,7 +35,7 @@ public class HealthSystem : MonoBehaviour
         Debug.Log("Set " + gameObject.name + "'s health to " +  _currentHealth + " out of " + _maxHealth);
     }
 
-    protected virtual void Heal(int healAmount)
+    public virtual void Heal(int healAmount)
     {
         _currentHealth += healAmount;
 
@@ -47,11 +47,11 @@ public class HealthSystem : MonoBehaviour
         Debug.Log(gameObject.name + " was healed by " + healAmount + " resulting in " + _currentHealth + " out of " + _maxHealth);
     }
     
-    protected virtual void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         _currentHealth -= damage;
 
-        Debug.Log(gameObject.name + "was damaged by " + damage + " resulting in " + _currentHealth + " out of " + _maxHealth);
+        Debug.Log(gameObject.name + " was damaged by " + damage + " resulting in " + _currentHealth + " out of " + _maxHealth);
 
         if (_currentHealth <= 0)
         {
