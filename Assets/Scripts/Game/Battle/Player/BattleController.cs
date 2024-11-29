@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class FlameController : MonoBehaviour
+public class BattleController : Controller
 {
     [Header("Movement")]
     [SerializeField] private float _speed;
@@ -82,8 +82,17 @@ public class FlameController : MonoBehaviour
         Debug.Log("Max Y: " + _maxY);
     }
 
-    private void OnMove(InputValue inputValue)
+    public override void Move(InputValue inputValue)
     {
+        base.Move(inputValue);
+
         _movementInput = inputValue.Get<Vector2>();
     }
+
+    public override void ToggleInventory()
+    {
+        base.ToggleInventory();
+    }
+
+
 }

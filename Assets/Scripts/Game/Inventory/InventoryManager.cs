@@ -6,6 +6,29 @@ using UnityEngine.InputSystem;
 
 public class InventoryManager : MonoBehaviour
 {
+    #region Singleton
+    // Static instance to allow global access
+    public static InventoryManager Instance { get; private set; }
+
+    // Awake is called before Start
+    private void Awake()
+    {
+        // Check if an instance already exists
+        if (Instance != null && Instance != this)
+        {
+            // Destroy duplicate instances
+            Destroy(gameObject);
+            return;
+        }
+
+        // Assign this instance to the static property
+        Instance = this;
+
+        //// Optionally, make this object persistent across scenes
+        //DontDestroyOnLoad(gameObject);
+    }
+    #endregion
+
     [SerializeField]
     private GameObject _inventoryCanvas;
 
@@ -31,16 +54,14 @@ public class InventoryManager : MonoBehaviour
     private float _promptLetterDelay;
 
     // Subscriptions
-    Subscription<ToggleInventoryEvent> _toggleInventoryEvent;
     Subscription<AddItemEvent> _addItemEvent;
 
     void Start()
     {
-        _toggleInventoryEvent = EventBus.Subscribe<ToggleInventoryEvent>(ToggleInventory);
         _addItemEvent = EventBus.Subscribe<AddItemEvent>(AddItem);
     }
 
-    private void ToggleInventory(ToggleInventoryEvent t)
+    public void ToggleInventory(string _prompt)
     {
         //Debug.Log("Toggling Inventory");
         if (_inventoryCanvas == null) { return; }
@@ -49,16 +70,14 @@ public class InventoryManager : MonoBehaviour
 
         if (_inventoryCanvas.activeSelf)
         {
-            FindObjectOfType<PlayerController>().enabled = false;
             _itemSlots[0].SelectItem();
             _selectedItemSlotIndex = 0;
             ShowItem(_itemSlots[0].GetItemInfo());
-            Prompt(t.prompt);
+            Prompt(_prompt);
         }
         else
         {
             _itemSlots[_selectedItemSlotIndex].DeselectItem();
-            FindObjectOfType<PlayerController>().enabled = true;
         }
     }
 
@@ -101,13 +120,8 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void OnMove(InputValue inputValue)
+    public void MoveSelection(InputValue inputValue)
     {
-        if(!_inventoryCanvas.activeSelf)
-        {
-            return;
-        }
-
         //Debug.Log("Changing selected item from: " + _selectedItemSlotIndex.ToString());
 
         Vector2 _selectionInput = inputValue.Get<Vector2>().normalized;
@@ -136,13 +150,8 @@ public class InventoryManager : MonoBehaviour
         ShowItem(_itemSlots[_selectedItemSlotIndex].GetItemInfo());
     }
 
-    private void OnSubmit()
+    public void SubmitSelectedItem()
     {
-        if (!_inventoryCanvas.activeSelf)
-        {
-            return;
-        }
-
         EventBus.Publish<SubmitItemEvent>(new SubmitItemEvent(_itemSlots[_selectedItemSlotIndex].GetItemInfo()));
 
         Debug.Log($"Submitted the {_itemSlots[_selectedItemSlotIndex].GetItemInfo().name} item.");
@@ -150,7 +159,6 @@ public class InventoryManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        EventBus.Unsubscribe<ToggleInventoryEvent>(_toggleInventoryEvent);
         EventBus.Unsubscribe<AddItemEvent>(_addItemEvent);
     }
 }

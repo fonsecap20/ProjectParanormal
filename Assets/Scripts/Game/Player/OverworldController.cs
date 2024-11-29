@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class OverworldController : Controller
 {
     // Movement variables.
     [SerializeField] private float _speed;
@@ -29,15 +27,19 @@ public class PlayerController : MonoBehaviour
         _rigidbody.velocity = _smoothedMovementInput * _speed;
     }
 
-    private void OnMove(InputValue inputValue)
+    public override void Move(InputValue inputValue)
     {
+        base.Move(inputValue);
+
         _movementInput = inputValue.Get<Vector2>();
     }
 
-    private void OnToggleInventory()
+    public override void ToggleInventory()
     {
-        //Debug.Log("Toggle Inventory");
-        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent("Let me take a look..."));
+        base.ToggleInventory();
+
+        InventoryManager.Instance.ToggleInventory("Let me take a look...");
+        ControllerManager.Instance.SwitchActiveController(ControllerType.InventoryController);
     }
 
     private void OnDisable()

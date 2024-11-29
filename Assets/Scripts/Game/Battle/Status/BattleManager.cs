@@ -19,6 +19,29 @@ public enum BattleState
 
 public class BattleManager : MonoBehaviour
 {
+    #region Singleton
+    // Static instance to allow global access
+    public static BattleManager Instance { get; private set; }
+
+    // Awake is called before Start
+    private void Awake()
+    {
+        // Check if an instance already exists
+        if (Instance != null && Instance != this)
+        {
+            // Destroy duplicate instances
+            Destroy(gameObject);
+            return;
+        }
+
+        // Assign this instance to the static property
+        Instance = this;
+
+        //// Optionally, make this object persistent across scenes
+        //DontDestroyOnLoad(gameObject);
+    }
+    #endregion
+
     [Header("Universal Variables")]
     [SerializeField] GameObject _player;
     [SerializeField] GameObject _playerBattleIcon;
@@ -49,12 +72,11 @@ public class BattleManager : MonoBehaviour
 
     private void StartBattle(StartBattleEvent e)
     {
-        Debug.Log("Starting fight with " + e.enemy.name);   
+        Debug.Log("Starting fight with " + e.enemy.name);
+        ControllerManager.Instance.SwitchActiveController(ControllerType.None);
+        
         _battleState = BattleState.Start;
-
-        _player.GetComponent<PlayerController>().enabled = false;
         currentEnemy = e.enemy;
-
         StartCoroutine(BattleTransition());
     }
 
@@ -78,7 +100,8 @@ public class BattleManager : MonoBehaviour
         yield return FadeImage(_blackScreen, 1f, 0f, _transitionDuration / 2);
 
         // Open inventory with first prompt.
-        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent("Come forth! I know what holds you to our world!"));
+        InventoryManager.Instance.ToggleInventory("Come forth! I know what holds you to our world!");
+        ControllerManager.Instance.SwitchActiveController(ControllerType.InventoryController, false);
 
         PlayerTurn();
     }
@@ -130,7 +153,7 @@ public class BattleManager : MonoBehaviour
     private void EnemyTransition()
     {
         // Close the suitcase.
-        EventBus.Publish<ToggleInventoryEvent>(new ToggleInventoryEvent(""));
+        InventoryManager.Instance.ToggleInventory("");
 
         // Instantiate the enemy.
         GameObject spawnedEnemy = Instantiate(currentEnemy.enemyPrefab);
