@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c7696c5f1584346b81da6d1e1f1307, type: 3}
   m_Name: DefaultEnemy
   m_EditorClassIdentifier: 
-  name: Default
-  enemyPrefab: {fileID: 4325685312207143384, guid: 3cbd0f7a298f2cc4a810d66198a05580, type: 3}
-  defendMinigamePrefab: {fileID: 0}
-  punishMinigamePrefab: {fileID: 0}
-  solution:
-  - {fileID: 11400000, guid: ed86347e7a6710f4bbbeb24f7e28ab3f, type: 2}
+  _name: Default
+  _enemyPrefab: {fileID: 4325685312207143384, guid: 3cbd0f7a298f2cc4a810d66198a05580, type: 3}
+  _defendMinigamePrefab: {fileID: 5564048482229889663, guid: 3227772aa862f5940b477c1ba936ce2b, type: 3}
+  _punishMinigamePrefab: {fileID: 0}
+  _solution:
   - {fileID: 11400000, guid: 2530ceb5d6544ba4782d39c1ecfc0a0a, type: 2}
+  - {fileID: 11400000, guid: ed86347e7a6710f4bbbeb24f7e28ab3f, type: 2}
+  _wrongAnswerDialogue: []
+  _rightAnswerDialogue:
+  - {fileID: 11400000, guid: 1f6ad4c3f009a544e9544b3b291529ed, type: 2}

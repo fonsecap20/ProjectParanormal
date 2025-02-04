@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 4594636025042885648}
   - component: {fileID: 4594636025042885649}
   - component: {fileID: 4594636025042885662}
-  - component: {fileID: 5467786420582650195}
   - component: {fileID: 4594636025042885650}
+  - component: {fileID: 5467786420582650195}
+  - component: {fileID: 4136929437717145128}
   - component: {fileID: 3579031779537461962}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -136,19 +137,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5467786420582650195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4594636025042885663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c221ccfbb9475b44cbfbf5b5d423e76f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _controllerType: 2
 --- !u!114 &4594636025042885650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,7 +150,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controllerType: 3
+  canToggleInventory: 1
   _speed: 5
+--- !u!114 &5467786420582650195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594636025042885663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c221ccfbb9475b44cbfbf5b5d423e76f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllerType: 2
+  canToggleInventory: 1
+--- !u!114 &4136929437717145128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594636025042885663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeab776b546fbf649a550f57d1f476b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllerType: 1
+  canToggleInventory: 1
 --- !u!114 &3579031779537461962
 MonoBehaviour:
   m_ObjectHideFlags: 0

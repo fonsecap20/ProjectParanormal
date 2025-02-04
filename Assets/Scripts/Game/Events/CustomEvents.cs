@@ -48,3 +48,27 @@ public class BattleStateChange
         battleState = _battleState;
     }
 }
+
+//====DIALOGUE====//
+public class StartConversationEvent
+{
+    public Conversation conversation;
+
+    public StartConversationEvent(Conversation _conversation) 
+    {
+        conversation = _conversation;
+    }
+}
+
+public class ShowNextDialogueEvent
+{
+    public ShowNextDialogueEvent () { }
+}
+
+public class EndConversationEvent
+{
+    public EndConversationEvent()
+    {
+
+    }
+}

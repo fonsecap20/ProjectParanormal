@@ -10,21 +10,18 @@ public class OverworldController : Controller
     private Vector2 _movementInput;
     private Vector2 _smoothedMovementInput;
     private Vector2 _movementInputSmoothVelocity;
+    private bool _shouldMove = false;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate()
+    public override void Activate()
     {
-        _smoothedMovementInput = Vector2.SmoothDamp(
-            _smoothedMovementInput,
-            _movementInput,
-            ref _movementInputSmoothVelocity,
-            0.1f);
+        base.Activate();
 
-        _rigidbody.velocity = _smoothedMovementInput * _speed;
+        _shouldMove = true;
     }
 
     public override void Move(InputValue inputValue)
@@ -42,8 +39,24 @@ public class OverworldController : Controller
         ControllerManager.Instance.SwitchActiveController(ControllerType.InventoryController);
     }
 
-    private void OnDisable()
+    public override void Deactivate()
     {
+        base.Deactivate();
+
         _rigidbody.velocity = Vector2.zero;
+        _shouldMove = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (!_shouldMove) { return; }
+
+        _smoothedMovementInput = Vector2.SmoothDamp(
+            _smoothedMovementInput,
+            _movementInput,
+            ref _movementInputSmoothVelocity,
+            0.1f);
+
+        _rigidbody.velocity = _smoothedMovementInput * _speed;
     }
 }

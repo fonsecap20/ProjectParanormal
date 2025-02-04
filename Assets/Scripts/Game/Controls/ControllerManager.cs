@@ -43,7 +43,13 @@ public class ControllerManager : MonoBehaviour
 
     private void Start()
     {
+        FindAllControllers();
         SwitchActiveController(ControllerType.OverworldController);
+    }
+
+    private void FindAllControllers()
+    {
+        controllers = FindObjectsByType<Controller>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
     }
 
     private void OnMove(InputValue inputValue)
@@ -66,6 +72,11 @@ public class ControllerManager : MonoBehaviour
 
     public void SwitchActiveController(ControllerType _newControllerType, bool _canToggleInventory = true)
     {
+        if (_activeController != null)
+        {
+            _activeController.Deactivate();
+        }
+
         if (_newControllerType == ControllerType.None)
         {
             // No inputs should be responded to.
@@ -79,6 +90,7 @@ public class ControllerManager : MonoBehaviour
         if (new_controller != null)
         {
             _activeController = new_controller;
+            _activeController.Activate();
             Debug.Log($"Found new controller of type {_newControllerType}");
         }
         else

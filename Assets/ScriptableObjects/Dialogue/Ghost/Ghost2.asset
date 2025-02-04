@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43fbdccd502b9c4da6c12890ff7ac60, type: 3}
+  m_Name: Ghost2
+  m_EditorClassIdentifier: 
+  _profile: {fileID: -113871357, guid: 32ff2443c47fb81439219b1ba5cee3f0, type: 3}
+  _name: Ghost
+  _dialogue: What is the meaning of this entrapment. I was busy messing the kitchen
+    up.
+  _timeBetweenLetters: 0.1

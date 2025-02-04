@@ -11,6 +11,7 @@ public enum BattleState
     None, // Outside of battle.
     Start, // Start of the battle.
     PlayerTurn, // Player is selecting an item.
+    Dialogue, // Player and Enemy are speaking.
     EnemyTurn, // Enemy is attacking.
     FinishedRound, // Enemy has stopped attacking. 
     Won, // Enemy is defeated.
@@ -56,27 +57,38 @@ public class BattleManager : MonoBehaviour
     [SerializeField] float _timeFadedOut;
     [SerializeField] float _enemyTransitionDuration;
 
+
+    // State Variables.
     private BattleState _battleState = BattleState.None;
-    private Enemy currentEnemy;
-    private int currentSolutionIndex = 0;
+    private Conversation _currentConversation;
+    private int _currentSolutionIndex = 0;
+
+    // Enemy Variables.
+    private Enemy _currentEnemySO;
+    private GameObject _enemy;
+    private GameObject _currentMinigamePrefab;
+    private Minigame _currentMinigame;
 
     // Subscriptions
     Subscription<StartBattleEvent> _battleStartEvent;
     Subscription<SubmitItemEvent> _submitItemEvent;
+    Subscription<EndConversationEvent> _endConversationEvent;
 
     void Start()
     {
         _battleStartEvent = EventBus.Subscribe<StartBattleEvent>(StartBattle);
         _submitItemEvent = EventBus.Subscribe<SubmitItemEvent>(CheckItem);
+        _endConversationEvent = EventBus.Subscribe<EndConversationEvent>(EnemyTurn); 
     }
 
+    #region Battle State
     private void StartBattle(StartBattleEvent e)
     {
         Debug.Log("Starting fight with " + e.enemy.name);
         ControllerManager.Instance.SwitchActiveController(ControllerType.None);
         
         _battleState = BattleState.Start;
-        currentEnemy = e.enemy;
+        _currentEnemySO = e.enemy;
         StartCoroutine(BattleTransition());
     }
 
@@ -90,8 +102,9 @@ public class BattleManager : MonoBehaviour
         // Move player to the middle of the player circle.
         _player.transform.position = _playerSide.transform.position;
 
-        // Turn on player circle.
+        // Turn on player and enemy circle.
         _playerSide.SetActive(true);
+        _enemySide.SetActive(true);
 
         // Wait for a short duration at full opacity
         yield return new WaitForSeconds(_timeFadedOut);
@@ -106,6 +119,109 @@ public class BattleManager : MonoBehaviour
         PlayerTurn();
     }
 
+    private void PlayerTurn()
+    {
+        _battleState = BattleState.PlayerTurn;
+
+        Debug.Log("Reached state of " + _battleState.HumanName());
+    }
+
+    private void CheckItem(SubmitItemEvent e)
+    {
+        bool correct = _currentEnemySO._solution[_currentSolutionIndex] == e.item; 
+
+        if (correct)
+        {
+            if (_currentSolutionIndex == 0)
+            {
+                EnemyTransition();
+
+                Debug.Log("Spawn Enemy");
+            }
+            else
+            {
+                //_enemy.GetComponent<EnemyHealth>().TakeDamage(1);
+            }
+
+            SelectMinigame(true);
+            Dialogue(true);
+
+        }
+        else
+        {
+            _player.GetComponent<PlayerHealth>().TakeDamage(1);
+
+            SelectMinigame(false);
+            Dialogue(false);
+        }
+    }
+
+    private void EnemyTransition()
+    {
+        // Close the suitcase.
+        InventoryManager.Instance.ToggleInventory("");
+
+        // Instantiate the enemy.
+        GameObject spawnedEnemy = Instantiate(_currentEnemySO._enemyPrefab);
+        _enemy = spawnedEnemy;
+
+        // Move enemy to the middle of the enemy circle.
+        spawnedEnemy.transform.position = _enemySide.transform.position;
+
+        // Make spawned enemy transparent.
+        SpriteRenderer enemySR = spawnedEnemy.GetComponent<SpriteRenderer>();
+        enemySR.color = new Color(enemySR.color.r, enemySR.color.g, enemySR.color.b, 0);
+
+        // Fade in enemy.
+        StartCoroutine(FadeSprite(enemySR, 0f, 1f, _enemyTransitionDuration));
+    }
+
+    private void SelectMinigame(bool _correct)
+    {
+        if (_correct)
+        {
+            _currentMinigamePrefab = _currentEnemySO._defendMinigamePrefab;
+        }
+        else
+        {
+            _currentMinigamePrefab = _currentEnemySO._punishMinigamePrefab;
+        }
+    }
+
+    private void Dialogue(bool _correct)
+    {
+        List<Conversation> correctConversations = _currentEnemySO._rightAnswerDialogue;
+        List<Conversation> wrongConversations = _currentEnemySO._wrongAnswerDialogue;
+
+
+        if (_correct)
+        {
+            _currentConversation = correctConversations[_currentSolutionIndex];
+            _currentSolutionIndex++;
+        }
+        else
+        {
+            _currentConversation = wrongConversations[Random.Range(0, wrongConversations.Count)];
+        }
+
+        EventBus.Publish<StartConversationEvent>(new StartConversationEvent(_currentConversation));
+    }
+
+    private void EnemyTurn(EndConversationEvent e)
+    {
+        ControllerManager.Instance.SwitchActiveController(ControllerType.BattleController);
+        _battleState = BattleState.EnemyTurn;
+        _battleBox.SetActive(true);
+
+        _currentMinigame = Instantiate(_currentMinigamePrefab, _battleBox.transform).GetComponent<Minigame>();
+        _currentMinigame.StartMinigame();
+
+        Debug.Log("Enemy Turn");
+    }
+
+    #endregion
+
+    #region Helper Functions
     IEnumerator FadeImage(Image image, float startAlpha, float endAlpha, float duration)
     {
         Color color = image.color;
@@ -124,55 +240,6 @@ public class BattleManager : MonoBehaviour
         // Ensure the final alpha value is set
         color.a = endAlpha;
         image.color = color;
-    }
-
-    private void PlayerTurn()
-    {
-        _battleState = BattleState.PlayerTurn;
-
-        Debug.Log("Reached state of " + _battleState.HumanName());
-    }
-
-    private void CheckItem(SubmitItemEvent e)
-    {
-        bool correct = currentEnemy.solution[currentSolutionIndex] == e.item; 
-
-        if (correct)
-        {
-            EnemyTransition();
-
-            Debug.Log("Spawn Enemy");
-
-        }
-        else
-        {
-            _player.GetComponent<PlayerHealth>().TakeDamage(1);
-        }
-    }
-
-    private void EnemyTransition()
-    {
-        // Close the suitcase.
-        InventoryManager.Instance.ToggleInventory("");
-
-        // Instantiate the enemy.
-        GameObject spawnedEnemy = Instantiate(currentEnemy.enemyPrefab);
-
-        // Move enemy to the middle of the enemy circle.
-        spawnedEnemy.transform.position = _enemySide.transform.position;
-
-        // Turn on enemy circle.
-        _enemySide.SetActive(true);
-
-        // Make spawned enemy and enemy circle transparent.
-        SpriteRenderer enemySR = spawnedEnemy.GetComponent<SpriteRenderer>();
-        SpriteRenderer enemySideSR = _enemySide.GetComponent<SpriteRenderer>();
-        enemySR.color = new Color(enemySR.color.r, enemySR.color.g, enemySR.color.b, 0);
-        enemySideSR.color = new Color(enemySideSR.color.r, enemySideSR.color.g, enemySideSR.color.b, 0);
-
-        // Fade in enemy and enemy circle.
-        StartCoroutine(FadeSprite(enemySR, 0f, 1f, _enemyTransitionDuration));
-        StartCoroutine(FadeSprite(enemySideSR, 0f, 1f, _enemyTransitionDuration));
     }
 
     IEnumerator FadeSprite(SpriteRenderer sr, float startAlpha, float endAlpha, float duration)
@@ -194,4 +261,5 @@ public class BattleManager : MonoBehaviour
         color.a = endAlpha;
         sr.color = color;
     }
+    #endregion
 }
